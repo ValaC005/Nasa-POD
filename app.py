@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 # Constants
 BASE_URL = 'https://apod.nasa.gov/apod/'
-API_KEY = 'yd3rfzu7WelJMyVFNI5sM1fYpVnYIfTRKuSHIfOI'
+API_KEY = 'nasa_api'
 
 def fetch_apod_data(selected_date):
     date_str = selected_date.strftime('%y%m%d')
