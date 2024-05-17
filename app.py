@@ -2,10 +2,11 @@ import streamlit as st
 import requests
 from datetime import date
 from bs4 import BeautifulSoup
+import urllib
 
 # Constants
 BASE_URL = 'https://apod.nasa.gov/apod/'
-API_KEY = 'yd3rfzu7WelJMyVFNI5sM1fYpVnYIfTRKuSHIfOI'
+API_KEY = 'api key'
 
 def fetch_apod_data(selected_date):
     date_str = selected_date.strftime('%y%m%d')
@@ -62,14 +63,48 @@ def display_apod(apod_data):
     st.write(apod_data['explanation'])
 
 def main():
-    st.header("NASA Astronomy Picture of the Day")
-    selected_date = st.date_input("Select a Date", value=date.today(), max_value=date.today())
+    # Set space background
+    st.markdown(
+        """
+        <style>
+        body {
+            background-image: url("https://wallpaperaccess.com/full/2180284.jpg");
+            background-size: cover;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-    if st.button("Fetch APOD"):
+    # Customize theme
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background-color: rgba(0,0,0,0.6);
+            color: white;
+        }
+        .stTextInput > div > div > input {
+            color: white;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.header("NASA Picture of the Day")
+    selected_date = st.date_input("Select a Date", value=date.today(), min_value=date(1995, 6, 16), max_value=date.today())
+
+    if st.button("And the picture of the day is..."):
         html_data = fetch_apod_data(selected_date)
         if html_data:
             apod_data = parse_data(html_data)
             display_apod(apod_data)
+
+            # Option to download the image
+            if apod_data['media_type'] == 'image':
+                download_link = f"[Download Image]({apod_data['media_url']})"
+                st.markdown(download_link, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
